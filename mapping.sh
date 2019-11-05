@@ -21,6 +21,19 @@ bwa
 samtools
 java -jar ${PICARD}
 
+
+#####Regroupage du début
+#!bin/bash > Initialisation.sh
+WORK_DIR=~/variant-calling/data >> Initialisation.sh
+mkdir -p ${WORK_DIR} >> Initialisation.sh
+cd ${WORK_DIR} >> Initialisation.sh
+java -version >> Initialisation.sh
+fastqc -version >> Initialisation.sh
+bwa >> Initialisation.sh
+samtools >> Initialisation.sh
+java -jar ${PICARD} >> Initialisation.sh
+cat Initialisation.sh
+
 ##########################################################
 ## Download, extract and index the reference chromosome ##
 ##########################################################
@@ -29,7 +42,7 @@ java -jar ${PICARD}
 # Command: wget
 # Input: url (http:// or ftp://)
 # Ouput: compressed reference sequence (.fa.gz)
-wget xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -O Homo_sapiens.Chr20.fa.gz
+wget ftp://ftp.ensembl.org/pub/release-98/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome.20.fa.gz -O Homo_sapiens.Chr20.fa.gz
 
 # Extract the reference chromosome
 # Command: gunzip
@@ -41,7 +54,7 @@ gunzip Homo_sapiens.Chr20.fa.gz
 # Command: bwa index
 # Input: reference (.fa)
 # Ouput: indexed reference (.fa.amb, .fa.ann, .fa.bwt, fa.pac, .fa.sa)
-bwa index Homo_sapiens.Chr20.fa
+bwa index Homo_sapiens.Chr20.fa.gz
 
 ######################################################
 ## Mapping of a family trio to the reference genome ##
@@ -79,8 +92,8 @@ bwa index Homo_sapiens.Chr20.fa
 # Command: wget
 # Input: url (http:// or ftp://)
 # Ouput: compressed sequencing reads (.fastq.gz)
-wget xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -O HG02024_SRR822145_1.filt.fastq.gz
-
+wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR822/SRR822145/SRR822145_1.fastq.gz -O HG02024_SRR822145_1.filt.fastq.gz
+wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR822/SRR822145/SRR822145_2.fastq.gz -O HG02024_SRR822145_2.filt.fastq.gz
 
 # Map the paired sequencing reads against the reference Human chromosome 20
 # Command: bwa mem
@@ -88,7 +101,7 @@ wget xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -O HG02024_SRR822145_1.filt.fastq.gz
 #          -t [number of CPU] (multi-threading)
 # Input: indexed reference (.fa), and compressed sequencing reads (.fastq.gz)
 # Ouput: alignment (.sam)
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx > HG02024_SRR822145.sam
+bwa mem Homo_sapiens.Chr20.fa HG02024_SRR822145_1.filt.fastq.gz HG02024_SRR822145_2.filt.fastq.gz  > HG02024_SRR822145.sam
 
 # (Optional)
 # Compute summary statistics of the alignment
@@ -109,13 +122,13 @@ samtools flagstat HG02024_SRR822145.sam > HG02024_SRR822145.sam.flagstats
 #	      https://broadinstitute.github.io/picard/explain-flags.html
 # Input: alignment (.sam)
 # Ouput: compressed alignment (.bam)
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx > HG02024_SRR822145.bam
+samtools view -b -f flag=3 HG02024_SRR822145.sam > HG02024_SRR822145.bam
 
 # Sort the alignment
 # Command: samtools sort
 # Input: compressed alignment (.bam)
 # Ouput: sorted and compressed alignment (.bam)
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx > HG02024_SRR822145.sorted.bam
+samtools sort HG02024_SRR822145.bam > HG02024_SRR822145.sorted.bam
 
 # Add Read group (cf https://gatkforums.broadinstitute.org/gatk/discussion/6472/read-groups)
 # Command: gatk AddOrReplaceReadGroups
@@ -138,13 +151,18 @@ samtools stats daughter.bam > daughter.bam.stats
 # Command: plot-bamstats
 # Input: statistics text file (output of samtools-stats)
 # Ouput: plots (.png)
-plot-bamstats -p ${WORK_DIR}/plots/ daughter.bam.stats
+###plot-bamstats -p ${WORK_DIR}/plots/ daughter.bam.stats // Pitêtre pas
 
 # Index the alignment
 # Command: samtools index
 # Input: alignment (.bam)
 # Ouput: indexed alignment (.bam.bai)
 samtools index daughter.bam
+
+
+######Compiler tout ça dans une fonction
+
+
 
 
 ###########################
