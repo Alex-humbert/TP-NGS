@@ -122,7 +122,7 @@ samtools flagstat HG02024_SRR822145.sam > HG02024_SRR822145.sam.flagstats
 #	      https://broadinstitute.github.io/picard/explain-flags.html
 # Input: alignment (.sam)
 # Ouput: compressed alignment (.bam)
-samtools view -b -f flag=3 HG02024_SRR822145.sam > HG02024_SRR822145.bam
+samtools view -b -f 3 HG02024_SRR822145.sam > HG02024_SRR822145.bam
 
 # Sort the alignment
 # Command: samtools sort
@@ -190,8 +190,7 @@ wget ${FTP_SEQ_FOLDER}/${RUN_ID}/${RUN_ID}_2.filt.fastq.gz -O ${SAMPLE_NAME}_${R
 # Command: bwa mem && samtools view && samtools sort
 # Input: indexed reference (.fa), and compressed sequencing reads (.fastq.gz)
 # Ouput: sorted alignment (.bam)
-bwa mem Homo_sapiens.Chr20.fa  ${SAMPLE_NAME}_${RUN_ID}_1.filt.fastq.gz ${SAMPLE_NAME}_${RUN_ID}_2.filt.fastq.gz | samtools view -b -f flag=3 |
-samtools sort > ${SAMPLE_NAME}_${RUN_ID}.sorted.bam
+bwa mem Homo_sapiens.Chr20.fa  ${SAMPLE_NAME}_${RUN_ID}_1.filt.fastq.gz ${SAMPLE_NAME}_${RUN_ID}_2.filt.fastq.gz | samtools view -b -f 3 | samtools sort > ${SAMPLE_NAME}_${RUN_ID}.sorted.bam
 
 
 # Add Read group
