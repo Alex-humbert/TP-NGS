@@ -72,7 +72,7 @@ java -jar ${PICARD} CreateSequenceDictionary \
 ### Prepare GATK input data #
 #############################
 
-for FILE_NAME in "daughter" "mother" "father"
+for FILE_NAME in "HG02024" "HG02025" "HG02026"
 do
 
 # Mark Duplicate reads
@@ -170,7 +170,7 @@ done
 # Command: gatk GenotypeGVCFs
 # Input : genomic variant calling files (.g.vcf) + reference genome (.fa)
 # Output: Variant calling file (.vcf)
-java -jar GenomeAnalysisTK.jar \
+java -jar ${GATK} \
    -T GenotypeGVCFs \
    -R ${REF_GENOME} \
    --variant ${FILE_NAME}.g.vcf \

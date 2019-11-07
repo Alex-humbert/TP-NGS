@@ -34,9 +34,9 @@ wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/working/20130606_sample_
 java -jar ${GATK} \
    -T GenotypeGVCFs \
    -R ${REF_GENOME} \
-   --variant daughter.g.vcf\
-   --variant mother.g.vcf\
-   --variant father.g.vcf \
+   --variant HG02024.g.vcf \
+   --variant HG02025.g.vcf \
+   --variant HG02026.g.vcf \
  	 -o trio.vcf
 
 
@@ -83,5 +83,5 @@ java -jar ${GATK} -T VariantEval \
    -T GenotypeConcordance \
    -R ${REF_GENOME} \
    -eval trio.vcf \
-   -comp truth_set.vcf \
+   -comp trio.phased.vcf \
    -o triotabulate.txt
