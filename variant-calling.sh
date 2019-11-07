@@ -71,6 +71,7 @@ java -jar ${PICARD} CreateSequenceDictionary \
 #############################
 ### Prepare GATK input data #
 #############################
+
 for FILE_NAME in "daughter" "mother" "father"
 do
 
