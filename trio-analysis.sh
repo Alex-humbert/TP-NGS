@@ -31,13 +31,13 @@ wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/working/20130606_sample_
 # Input : list of genomic variant calling files (.g.vcf) + reference genome (.fa)
 # Output: Variant calling file (.vcf)
 
-java -jar GenomeAnalysisTK.jar \
+java -jar ${GATK} \
    -T GenotypeGVCFs \
    -R ${REF_GENOME} \
-   --variant father.g.vcf \
-   --variant daugther.g.vcf\
+   --variant daughter.g.vcf\
    --variant mother.g.vcf\
-	-o trio.vcf
+   --variant father.g.vcf \
+ 	 -o trio.vcf
 
 
 ##########################
